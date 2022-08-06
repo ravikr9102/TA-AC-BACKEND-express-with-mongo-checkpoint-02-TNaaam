@@ -3,13 +3,43 @@ var router = express.Router();
 
 var event = require('../models/event');
 var remark = require('../models/remark');
-var category = require('../models/category');
+var moment = require('moment');
+
+// var category = require('../models/category');
+
+const allData = (req, res, next) => {
+  event.find({}, (err, events) => {
+    if (err) return next(err);
+    res.locals.categories = events
+      .map((e) => e.category)
+      .flat()
+      .reduce((acc, cv) => {
+        if (!acc.includes(cv)) acc.push(cv);
+        return acc;
+      }, []);
+    res.locals.location = events
+      .map((e) => e.location)
+      .reduce((acc, cv) => {
+        if (!acc.includes(cv)) acc.push(cv);
+        return acc;
+      }, []);
+    next();
+    console.log(res.locals);
+  });
+};
+
+// router.get('/', allData, (req, res, next) => {
+//   event.find({}, (err, events) => {
+//     if (err) return next(err);
+//     res.render('allEvent', { events });
+//   });
+// });
 
 // list event
-router.get('/', (req, res, next) => {
-  event.find({}, (err, event) => {
+router.get('/', allData, (req, res, next) => {
+  event.find({}, (err, events) => {
     if (err) return next(err);
-    res.render('allEvent', { event: event });
+    res.render('allEvent', { events: events });
   });
 });
 
@@ -28,22 +58,26 @@ router.get('/new', (req, res) => {
 // });
 
 // fetch single event
-router.get('/:id', (req, res, next) => {
+router.get('/:id', allData, (req, res, next) => {
   var id = req.params.id;
   event
     .findById(id)
     .populate('remark')
     .exec((err, event) => {
       if (err) return next(err);
+      console.log(event);
       res.render('eventDetail', { event });
     });
 });
 
 // create event
 router.post('/', (req, res, next) => {
-  req.body.tags = req.body.tags;
+  console.log(req.body, 'body');
+  req.body.category = req.body.category.split(' ');
+  console.log(req.body, 'after');
   event.create(req.body, (err, createdEvent) => {
     if (err) return next(err);
+    console.log('created event', createdEvent);
     res.redirect('/');
   });
 });
@@ -52,8 +86,10 @@ router.post('/', (req, res, next) => {
 router.get('/:id/edit', (req, res, next) => {
   var id = req.params.id;
   event.findById(id, (err, event) => {
+    var startDate = moment(event.startDate).format().slice(0, 10);
+    var endDate = moment(event.endDate).format().slice(0, 10);
     if (err) return next(err);
-    res.render('editEvent', { event });
+    res.render('editEvent', { event, startDate, endDate });
   });
 });
 
@@ -67,7 +103,7 @@ router.post('/:id', (req, res, next) => {
 });
 
 // delete event
-router.get('/:id/delete', (req, res, next) => {
+router.get('/:id/delete', allData, (req, res, next) => {
   var id = req.params.id;
   event.findByIdAndDelete(id, (err, event) => {
     if (err) return next(err);
@@ -79,7 +115,7 @@ router.get('/:id/delete', (req, res, next) => {
 });
 
 // increment like
-router.get('/:id/likes', (req, res, next) => {
+router.get('/:id/likes', allData, (req, res, next) => {
   var id = req.params.id;
   event.findByIdAndUpdate(id, { $inc: { likes: 1 } }, (err, event) => {
     if (err) return next(err);
@@ -88,7 +124,7 @@ router.get('/:id/likes', (req, res, next) => {
 });
 
 // decrement like
-router.get('/:id/Dislikes', (req, res, next) => {
+router.get('/:id/Dislikes', allData, (req, res, next) => {
   var id = req.params.id;
   event.findByIdAndUpdate(id, { $inc: { likes: -1 } }, (err, event) => {
     if (err) return next(err);
@@ -97,7 +133,7 @@ router.get('/:id/Dislikes', (req, res, next) => {
 });
 
 // for remark
-router.post('/:eventId/remark', (req, res, next) => {
+router.post('/:eventId/remark', allData, (req, res, next) => {
   var eventId = req.params.eventId;
   req.body.eventId = eventId;
   remark.create(req.body, (err, remark) => {
@@ -112,5 +148,8 @@ router.post('/:eventId/remark', (req, res, next) => {
     );
   });
 });
+
+// All filter
+
 
 module.exports = router;

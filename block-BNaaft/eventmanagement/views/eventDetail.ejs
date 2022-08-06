@@ -9,7 +9,7 @@ include('./partials/fontAwesome.ejs')%>
           <p>Location : <span><%= event.location%></span></p>
           <p>Hosted by : <span><%= event.host%></span></p>
           <p>
-            Category:<% event.eventCategory.forEach(cv=>{%>
+            Category:<% event.category.forEach(cv=>{%>
             <span><%= cv.name%></span>
             <% })%>
           </p>
@@ -76,6 +76,6 @@ include('./partials/fontAwesome.ejs')%>
         </div>
       </div>
     </div>
-    <%- include('./partials/sideBar.ejs')%>
+      <%- include('./partials/sideBar.ejs')%>  
   </section>
 </main>

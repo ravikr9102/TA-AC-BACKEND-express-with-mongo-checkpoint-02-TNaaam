@@ -3,8 +3,6 @@ var router = express.Router();
 
 var event = require('../models/event');
 var remark = require('../models/remark');
-var category = require('../models/category');
-
 
 // edit comment
 router.get('/:remarkId/edit', (req, res, next) => {
@@ -37,12 +35,12 @@ router.get('/:id/delete',(req,res,next) => {
 });
 
 // increment like for comment
-// router.get('/:id/likes', (req, res, next) => {
-//   var id = req.params.id;
-//   remark.findByIdAndUpdate(id, { $inc: { likes: 1 }}, (err, remark) => {
-//     if (err) return next(err);
-//     res.redirect('/event/' + id);
-//   });
-// });
+router.get('/:id/likes', (req, res, next) => {
+  var id = req.params.id;
+  remark.findByIdAndUpdate(id, { $inc: { likes: 1 }}, (err, remark) => {
+    if (err) return next(err);
+    res.redirect('/event/' + id);
+  });
+});
 
 module.exports = router;

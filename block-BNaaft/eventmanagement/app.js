@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const eventRouter = require('./routes/event');
 const remarkRouter = require('./routes/remark');
-// const categoryRouter = require('./routes/category');
 
 // connect to database
 mongoose.connect('mongodb://localhost:27017/eventmanagement', (err) => {
@@ -30,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/event', eventRouter);
 app.use('/event/remark', remarkRouter);
-// app.use('/event/category', categoryRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
