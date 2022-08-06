@@ -51,6 +51,15 @@ header nav ul li a{
   font-size: 2.4rem;
   font-weight: 800;
 }
+.btn {
+  padding: 0.6rem 2.2rem;
+  background-color: crimson;
+  border-radius: 2rem;
+  color: #fff;
+  text-transform: capitalize;
+  font-weight: 800;
+  margin-top: 1.2rem;
+}
 
 /*  */
 .hero {
@@ -67,6 +76,11 @@ header nav ul li a{
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.hero-container h1{
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 900;
 }
 
 /* event form  */

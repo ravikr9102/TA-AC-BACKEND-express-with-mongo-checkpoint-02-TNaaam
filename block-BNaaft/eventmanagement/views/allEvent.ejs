@@ -3,8 +3,7 @@ include('./partials/fontAwesome.ejs')%>
 <main>
   <section class="allevents-container">
     <div class="events-card-container">
-      <% if(event.length){ %> 
-    <% event.forEach(event=>{ %>
+      <% if(events.length){ %> <% events.forEach(event=>{ %>
       <div class="event-card">
         <h2><%= event.title%></h2>
         <div class="additional-information">
@@ -17,12 +16,10 @@ include('./partials/fontAwesome.ejs')%>
         </div>
         <a href="/event/<%= event._id%>" class="readmore">readmore</a>
       </div>
-      <%})%> 
-      <% } else{ %> 
-        <h2>No Event Detail Here</h2>
-        <% } %>
+      <%})%> <% } else{ %>
+      <h2>No Event Detail Here</h2>
+      <% } %>
     </div>
-    <!-- adding  the  sidebar  -->
     <%- include('./partials/sideBar.ejs')%>
   </section>
 </main>

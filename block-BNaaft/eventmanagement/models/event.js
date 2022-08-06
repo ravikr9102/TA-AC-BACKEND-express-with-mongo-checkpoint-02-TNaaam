@@ -7,7 +7,7 @@ var eventSchema = new Schema({
     host: String,
     startDate: { type: Date},
     endDate: { type: Date},
-    eventCategory: [{ type: Schema.Types.ObjectId, ref: 'Category'}],
+    category: [ String ],
     location: String,
     likes: { type: Number, default: 0},
     remark: [{ type: Schema.Types.ObjectId, ref: 'Remark'}]
