@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <div>
-    <form action="/search" method="GET" class="category-widget">
+    <form action="/event?category" method="GET" class="category-widget">
       <h4>All categories</h4>
       <select name="categories" id="">
         <% locals.categories.forEach((cat) => { %>
@@ -14,8 +14,8 @@
         <% }) %>
       </select>
       <br/>
-      <input type="date" name="start_ date" /> <br/><br/>
-      <input type="date" name="end_date" /> <br /><br />
+      <input type="date" name="startDate" /> <br/><br/>
+      <input type="date" name="endDate" /> <br /><br />
       <button>submit</button>
     </form>
   </div>
