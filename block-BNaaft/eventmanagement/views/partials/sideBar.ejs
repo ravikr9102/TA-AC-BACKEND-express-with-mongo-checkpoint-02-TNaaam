@@ -1,0 +1,22 @@
+<aside class="sidebar">
+  <div>
+    <form action="/event?category" method="GET" class="category-widget">
+      <h4>All categories</h4>
+      <select name="categories" id="">
+        <% locals.categories.forEach((cat) => { %>
+        <option value="<%= cat %>"><%= cat %></option>
+        <% }) %></select
+    <br/>
+      <h4>Events on locations</h4>
+      <select name="location" id="">
+        <% locals.location.forEach((cat) => { %>
+        <option value="<%= cat %>"><%= cat %></option>
+        <% }) %>
+      </select>
+      <br/>
+      <input type="date" name="startDate" /> <br/><br/>
+      <input type="date" name="endDate" /> <br /><br />
+      <button>submit</button>
+    </form>
+  </div>
+</aside>

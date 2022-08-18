@@ -1,0 +1,25 @@
+<%- include('./partials/header.ejs')%> <%-
+include('./partials/fontAwesome.ejs')%>
+<main>
+  <section class="allevents-container">
+    <div class="events-card-container">
+      <% if(events.length){ %> <% events.forEach(event=>{ %>
+      <div class="event-card">
+        <h2><%= event.title%></h2>
+        <div class="additional-information">
+          <div class="even-location">
+            <p>Location : <span><%= event.location%></span></p>
+          </div>
+          <div class="event-hostname">
+            <p>Hosted by : <span><%= event.host%></span></p>
+          </div>
+        </div>
+        <a href="/event/<%= event._id%>" class="readmore">readmore</a>
+      </div>
+      <%})%> <% } else{ %>
+      <h2>No Event Detail Here</h2>
+      <% } %>
+    </div>
+    <%- include('./partials/sideBar.ejs')%>
+  </section>
+</main>
