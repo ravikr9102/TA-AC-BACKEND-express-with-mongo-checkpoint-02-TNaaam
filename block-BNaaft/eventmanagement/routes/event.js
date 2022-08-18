@@ -6,27 +6,15 @@ var remark = require('../models/remark');
 var moment = require('moment');
 const { query } = require('express');
 
+// middleware
 const allData = (req, res, next) => {
   event.find({}, (err, events) => {
     if (err) return next(err);
     res.locals.categories = [
       ...new Set(events.map((event) => event.category).flat()),
     ];
-    // events
-    //   .map((e) => e.category)
-    //   .flat()
-    //   .reduce((acc, cv) => {
-    //     if (!acc.includes(cv)) acc.push(cv);
-    //     return acc;
-    //   }, []);
     let locations = events.map((event) => event.location);
     res.locals.location = [...new Set(locations)];
-    // events
-    //   .map((e) => e.location)
-    //   .reduce((acc, cv) => {
-    //     if (!acc.includes(cv)) acc.push(cv);
-    //     return acc;
-    //   }, []);
     next();
   });
 };
@@ -39,24 +27,17 @@ router.get('/', allData, async (req, res, next) => {
   if (categories) {
     filter.category = { $in: categories };
   }
-
   //query for location filter
-  // if (location) {
-  //   filter.location = location;
-  // }
-
+  if (location) {
+    filter.location = location;
+  }
   //if we are passsing date then get date data
   if (startDate && endDate) {
-    filter.startDate = { $gte: startDate, $lt: endDate };
+    filter.startDate = { $gte: startDate, $lte: endDate };
   }
-
   try {
-    //if we want data according to some filter
-    if (location || categories || (startDate && endDate)) {
-      let events = await event.find(filter);
-      return res.render('allEvent', { events: events });
-    }
-    let events = await event.find({});
+    let events = await event.find(filter);
+    console.log(events);
     return res.render('allEvent', { events: events });
   } catch (error) {
     next(error);
@@ -81,9 +62,7 @@ router.get('/:id', allData, async (req, res, next) => {
 
 // create event
 router.post('/', (req, res, next) => {
-  console.log(req.body, 'body');
   req.body.category = req.body.category.split(' ');
-  console.log(req.body, 'after');
   event.create(req.body, (err, createdEvent) => {
     if (err) return next(err);
     console.log('created event', createdEvent);
@@ -95,6 +74,7 @@ router.post('/', (req, res, next) => {
 router.get('/:id/edit', (req, res, next) => {
   var id = req.params.id;
   event.findById(id, (err, event) => {
+    console.log(err, event);
     var startDate = moment(event.startDate).format().slice(0, 10);
     var endDate = moment(event.endDate).format().slice(0, 10);
     if (err) return next(err);
@@ -104,6 +84,7 @@ router.get('/:id/edit', (req, res, next) => {
 
 // update event
 router.post('/:id', (req, res, next) => {
+  console.log(req.body);
   var id = req.params.id;
   event.findByIdAndUpdate(id, req.body, (err, updateData) => {
     if (err) return next(err);
@@ -157,7 +138,5 @@ router.post('/:eventId/remark', allData, (req, res, next) => {
     );
   });
 });
-
-// All filter
 
 module.exports = router;
